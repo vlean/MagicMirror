@@ -1,4 +1,4 @@
-# MagicMirror
+# Make a MagicMirror
 let's make a MagicMirror
 
 ## 0x00 材料准备

@@ -293,6 +293,8 @@ nohup chromium-browser –start-maximized –start-fullscreen --kiosk --incognit
 
 没有设置屏幕常亮，正常30分钟后，屏幕会关闭。通过声音传感器来监听声音，如果有声音就唤醒屏幕。
 
+
+![start](/public/start.jpeg) ![MagicMirror](/public/MagicMirror.jpeg)
 ## 0x05 结语
 
 以上结束。

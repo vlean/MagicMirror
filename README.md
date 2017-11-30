@@ -171,6 +171,7 @@ else:
 ```python
 import RPi.GPIO
 import time
+import os
 
 # 声音感应器OUT口连接的GPIO口,BCM端口
 SENSOR = 4
@@ -184,10 +185,14 @@ RPi.GPIO.setup(SENSOR, RPi.GPIO.IN, pull_up_down=RPi.GPIO.PUD_UP)
 
 try:
     while True:
-        # 检测声音感应器是否输出低电平，若是低电平，表示声音被检测到，点亮或关闭LED灯
+        # 检测声音感应器是否输出低电平，若是低电平，表示有声音
         if (RPi.GPIO.input(SENSOR) == 0):
-            print ('had voice') #或者存储起来或者做其他操作，如调亮屏幕
+            # 唤醒屏幕
+            os.system("export DISPLAY=:0.0 && xset dpms force on")
             time.sleep(0.5)
+        
+        #限制频率防止占用过高cpu
+        time.sleep(0.001)
 
 except KeyboardInterrupt:
     pass
@@ -200,6 +205,9 @@ RPi.GPIO.cleanup()
 ## 0x04 搭建MagicMirror
 
 **安装MagicMirror**
+
+下面的安装有时会遇到一直卡在electron扩展的安装，看github里有很多提示无法安装的问题，我强制指定了下源，等待了许久安装成功了。
+但新版的`MagicMirror`使用了模拟器，相比打开chrome访问固定网址，占用的cpu更高，发热比较大，所以最后还是采用了原始的方式。
 
 ```bash
 #debian 7及以下使用下面命令
@@ -235,19 +243,59 @@ sudo npm install -g electron@1.7.6
 npm start
 ```
 
+最后在[HelloWk/MagicMirror](https://github.com/HelloWk/MagicMirror)的基础上修改了下天气调用的api、新闻及日历事件。
+
 
 
 
 **supervisor管理脚本**
 [配置参考](http://blog.csdn.net/xyang81/article/details/51555473)
-```bash
-#安装supervisor
-pip install supervisor
 
-#supervisor脚本
+supervisor配置
 
+```ini
+#supervisor.conf配置文件
+[supervisord]
+logfile=/tmp/supervisor.log
+logfile_maxbytes=50MB
+logfile_backups=10
+loglevel=info
+
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+[supervisorctl]
+serverurl=unix:///tmp/supervisor.sock
+
+[unix_http_server]
+file=/tmp/supervisor.sock
+
+[include]
+files = conf/*.ini
+
+#管理脚本
+[program:mm]
+command=/home/pi/start.sh 
+autostart=true
+startsecs=1
+autorestart=true
+startretries=0
+user=pi
+redirect_stderr=true
+stdout_logfile=/tmp/super_mm.log
 ```
 
+`start.sh`脚本内容
+```bash
+#!/bin/bash
+#启动后如有提示默认浏览器等弹框，可以通过增加--disable-***参数来控制
+nohup chromium-browser –start-maximized –start-fullscreen --kiosk --incognito  http://localhost > /tmp/chrome.log &
+```
+
+没有设置屏幕常亮，正常30分钟后，屏幕会关闭。通过声音传感器来监听声音，如果有声音就唤醒屏幕。
+
+## 0x05 结语
+
+以上结束。
 
 ## 0xFF 参考资料
 

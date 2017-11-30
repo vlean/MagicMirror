@@ -29,7 +29,7 @@ let's make a MagicMirror
 - [ ] usb免驱麦克风
 - [ ] 声卡
 
-`树莓派集成语音服务，准备采用蓝牙音箱和普通的usb麦克风。但是蓝牙能连接上，却一直播放不出声音，调试了几天也没找到原因。so，Sos...`
+`树莓派集成语音服务，准备采用蓝牙音箱和普通的usb麦克风。但是蓝牙能连接上，却一直播放不出声音，调试了几天也没找到原因，暂时放弃制作。。so，这方面有了解的朋友SOS...`
 
 外框制作，可选择绘制cad然后交给淘宝去定制边框，也可以自动淘些木板自己动手。材料可以选择亚克力板或者木板。木材推荐白蜡、榉木、红松这些，它们的特点是结疤少，纹路细腻，制作出来的效果很赞，打磨后不用上漆就很光滑自然,我选用的榉木,后面可以看下效果。自己制作的话，没有木工经验的建议去找个木工俱乐部，借助机械化的设备来做，省时省力还省钱 :)。
 
@@ -202,7 +202,11 @@ RPi.GPIO.cleanup()
 **安装MagicMirror**
 
 ```bash
+#debian 7及以下使用下面命令
 sudo apt-get install python-software-properties
+#debian 8使用下面命令
+sudo apt-get install software-properties-common
+
 sudo add-apt-repository ppa:gias-kay-lee/npm
 sudo apt-get update
 sudo apt-get install nodejs npm -y
@@ -215,6 +219,17 @@ bash -c "$(curl -sL https://raw.githubusercontent.com/MichMich/MagicMirror/maste
 #安装MagicMirrors
 cd ~/MagicMirrors
 npm install
+
+#安装过程中如果一直卡在安装electron扩展，可以退出，执行下面命令
+#删除文件
+rm -rf node_modules/electron
+#设置源
+npm i electron --registry=https://registry.npm.taobao.org
+#具体可以参考这个issue
+#https://github.com/MichMich/MagicMirror/issues/1005
+
+#or 
+sudo npm install -g electron@1.7.6
 
 #运行MagicMirrors
 npm start

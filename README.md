@@ -1,6 +1,8 @@
 # Make a MagicMirror
 let's make a MagicMirror
 
+[![Page Views Count](https://badges.toozhao.com/badges/01EH4NQ1QAMAHTA8GCF37MEKEB/green.svg)](https://badges.toozhao.com/badges/01EH4NQ1QAMAHTA8GCF37MEKEB/green.svg "Get your own page views count badge on badges.toozhao.com")
+
 ## 0x00 材料准备
 
 下面的材料都可以万能的淘宝里找到，基础设备上需要用到：
